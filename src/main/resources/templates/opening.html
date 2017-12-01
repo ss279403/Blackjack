@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf8">
+<title>BlackJack</title>
+</head>
+<body>
+	<h1 class="header">
+		Welcome to the World Wide Web Casino!
+		<p> Tell us who you are and how much you want to exchange for currency.</p>
+	</h1>
+	
+	<form method="post" action="/goToGame">
+		Your Name: <input required type="text" name="name">
+		Total value of currency: <input required type="number" name="currency">
+		<button class="firstButton">Let's Play!</button>
+
+	</form>
+ 
+ 
+
+
+
+
+	<form method="post" action="/showDeck">
+		<button>show deck</button>
+
+<!-- 		{{ #deck }} -->
+<!-- 		<ol>{{deck}} -->
+<!-- 		</ol> -->
+<!-- 		{{ /deck }}  -->
+		<br>
+		{{ #dealerDeck }}
+		{{dealerDeck}}
+		{{dealerValue}}
+		{{ /dealerDeck }}
+		<br>
+		{{ #playerDeck }}
+		{{playerDeck}}
+		{{playerValue}}
+		{{ /playerDeck }}
+		
+		{{ #deck.cards }}
+		{{ . }}
+		{{ /deck.cards }} 
+		
+
+	</form>
+
+</body>
+</html>

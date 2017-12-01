@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Play Your Hand</title>
+</head>
+<body>
+
+<h1>BLACKJACK</h1>
+
+<h2>Dealer Hand</h2>
+{{#game.dealer.hand.cards}}
+	<div>{{ rank }} of {{ suit }}</div>
+{{/game.dealer.hand.cards}}
+{{#game.dealer.hidden}}
+{{.}} 
+{{/game.dealer.hidden}}
+<br>
+Dealer Score = {{game.dealer.hand.total}}
+<br>
+{{#game.dealer.hand.busted}}
+{{.}} 
+
+{{/game.dealer.hand.busted}}
+
+<br>
+
+<h2>Player Hand</h2>
+
+{{#game.player.hand.cards}}
+	<div>{{ rank }} of {{ suit }}</div>
+{{/game.player.hand.cards}}
+You Score = {{game.player.hand.total}}
+
+<br>
+{{#game.player.hand.busted}}
+{{.}} 
+
+{{/game.player.hand.busted}}
+
+<br>
+${{game.playerBet}} is your bet.
+
+<br>
+Value of Chips ${{game.chips.money}}
+<br>
+
+{{#game.player.hand.isNotBusted}}
+<form method="post" action="/hit">
+	<button>Hit me</button>
+</form>
+{{/game.player.hand.isNotBusted}}
+
+
+<form method="post" action="/stand">
+	<button>Stand</button>
+</form>
+
+{{#game.didPlayerLose}}
+You lost the hand, but you can bet again!
+<form method="post" action="/reBet">
+	<input autofocus type="number" name="bet">
+	<button>Place bet</button>
+	<br><br> OR leave table and visit the 400 lounge <br>
+	<button>Leave Table</button>
+</form>
+{{/game.didPlayerLose}}
+
+{{#game.didPlayerWin}}
+You WON the hand, keep playing!
+<form method="post" action="/reBet">
+	<input autofocus type="number" name="bet">
+	<button>Place bet</button>
+	<br><br> OR leave table and visit the 400 lounge <br>
+	<button>Leave Table</button>
+</form>
+{{/game.didPlayerWin}}
+
+{{#game.deck.deck}}
+	{{rank}} of {{suit}}
+{{/game.deck.deck}}
+</body>
+</html>

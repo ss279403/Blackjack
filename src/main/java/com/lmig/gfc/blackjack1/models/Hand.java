@@ -27,23 +27,27 @@ public class Hand {
 				aces += 1;
 			sum += card.getValue();
 		}
-
+ 
 		if (sum > 21) {
-			while (aces > 0) {
-				sum -= 10;
+			while (aces > 0 && sum > 21) {
+				sum -= 10; 
 				aces -= 1;
 			}
 		}
 
 		return sum;
 	}
-
+	
 	public boolean isNotBusted() {
 		return getTotal() < 21;
 	}
 
 	public boolean isBusted() {
 		return getTotal() > 21;
+	}
+	
+	public boolean removeStandButton() {
+		return getTotal() < 22;
 	}
 
 	public String getBusted() {
@@ -56,7 +60,7 @@ public class Hand {
 
 	public int getSize() {
 		return cards.size();
-		
+
 	}
 
 }

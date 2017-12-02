@@ -2,7 +2,7 @@ package com.lmig.gfc.blackjack1.models;
 
 public class Game {
 
-	private int playerBet;
+	private double playerBet;
 	private Deck deck;
 	private Player player;
 	private Dealer dealer;
@@ -16,7 +16,6 @@ public class Game {
 
 		deck.createDeck();
 		deck.shuffle();
-
 	}
 
 	public void hitPlayer() {
@@ -27,65 +26,107 @@ public class Game {
 	public void hitDealer() {
 		Card newCardFromDeck = deck.draw();
 		dealer.accept(newCardFromDeck);
-
 	}
-
 
 	public void playerStands() {
 		while (dealer.getHandTotal() < 17) {
 			this.hitDealer();
 		}
-
 	}
 
 	public void setUpGame() {
 		player.newHand();
 		dealer.newHand();
+		chips.decreaseByBet(playerBet);
 		this.hitPlayer();
 		this.hitPlayer();
 		this.hitDealer();
-
 	}
 
 	public boolean didPlayerLose() {
-		if (player.getHandTotal() > 21 || dealer.getHandTotal() > player.getHandTotal() || player.getHandSize() > 5) {
+		if (player.getHandTotal() > 21) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public boolean didPlayerWin() {
-		if (dealer.getHandSize() > 1 && (dealer.getHandTotal() > 21 || player.getHandTotal() > dealer.getHandTotal())) {
+		if (player.getHandTotal() > dealer.getHandTotal() && !player.isBusted()) {
+			return true;
+		} else if (dealer.isBusted()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean didDealerWin() {
+		if (player.isBusted() || (dealer.getHandTotal() > player.getHandTotal() && !dealer.isBusted())) {
+			return true;
+
+		} else {
+			return false;
+		}
+	}
+
+	public boolean isPush() {
+		if ((player.getHandTotal() == dealer.getHandTotal()) && (!player.isBusted() || !dealer.isBusted())) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
 
-//	public void payout(int bet) {
-//		chips += bet;
-		// if (didPlayerLose() == true) {
-		// return (chips.getMoney() - playerBet);
-		// } else {
-		// return (chips.getMoney() + playerBet);
-		// }
-	
+	public boolean isBlackjack() {
+		if (player.getHandSize() == 2 && player.getHandTotal() == 21) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-	public void makePlayerBet(int bet) {
+	public boolean outOfCards() {
+		return deck.size() == 0 ;
+	}
+
+	public void payout() {
+		if (isBlackjack() == true) {
+			chips.blackjackMoneyWin(playerBet);
+		}
+		if (didPlayerWin() == true) {
+			chips.increaseFromWin(playerBet);
+		}
+		if (isPush() == true) {
+			chips.pushPayout(playerBet);
+		} else {
+			chips.reduceFromLoss(playerBet);
+		}
+	}
+
+	public void makePlayerBet(double bet) {
 		playerBet = bet;
 	}
 
-	public int getPlayerBet() {
+	public double getPlayerBet() {
 		return playerBet;
+	}
+
+	public boolean outOfMoney() {
+		return chips.getMoney() <= 0;
+	}
+	
+	public void moreMoney() {
+		chips.depositMoney();
 	}
 
 	public void resetGame() {
 		player.newHand();
 		dealer.newHand();
 		this.setUpGame();
-
 	}
-
+	
+	public void newCards() {
+		deck.createDeck();
+		deck.shuffle();
+	}
 }

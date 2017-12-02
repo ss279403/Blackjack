@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="utf8">
 <title>Play Your Hand</title>
 </head>
 <body>
@@ -38,12 +38,8 @@ You Score = {{game.player.hand.total}}
 
 {{/game.player.hand.busted}}
 
-<br>
-${{game.playerBet}} is your bet.
 
-<br>
-Value of Chips ${{game.chips.money}}
-<br>
+
 
 {{#game.player.hand.isNotBusted}}
 <form method="post" action="/hit">
@@ -51,31 +47,29 @@ Value of Chips ${{game.chips.money}}
 </form>
 {{/game.player.hand.isNotBusted}}
 
-
+{{#game.player.hand.removeStandButton}}
 <form method="post" action="/stand">
 	<button>Stand</button>
 </form>
+{{/game.player.hand.removeStandButton}}
 
-{{#game.didPlayerLose}}
+{{#game.player.hand.isBusted}}
 You lost the hand, but you can bet again!
 <form method="post" action="/reBet">
-	<input autofocus type="number" name="bet">
+	<input autofocus type="number" name="bet" min="5" placeholder="$5 minimum" max={{game.chips.money}} required>
 	<button>Place bet</button>
-	<br><br> OR leave table and visit the 400 lounge <br>
-	<button>Leave Table</button>
 </form>
-{{/game.didPlayerLose}}
+{{/game.player.hand.isBusted}}
 
-{{#game.didPlayerWin}}
-You WON the hand, keep playing!
-<form method="post" action="/reBet">
-	<input autofocus type="number" name="bet">
-	<button>Place bet</button>
-	<br><br> OR leave table and visit the 400 lounge <br>
-	<button>Leave Table</button>
-</form>
-{{/game.didPlayerWin}}
+<br>
+${{game.playerBet}} is your bet.
+<br>
+Value of Chips ${{game.chips.money}}
+<br>
 
+
+
+<br><br><br>
 {{#game.deck.deck}}
 	{{rank}} of {{suit}}
 {{/game.deck.deck}}

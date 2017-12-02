@@ -30,7 +30,7 @@ public class Player {
 	public int getHandTotal() {
 		return hand.getTotal();
 	}
-
+	
 	public boolean isBusted() {
 		return hand.getTotal() > 21;
 	}
@@ -38,10 +38,4 @@ public class Player {
 	public int getHandSize() {
 		return hand.getSize();
 	}
-
-	// public String isBusted() {
-	// if (hand.getTotal() > 21);
-	// return "BUSTED!";
-	// }
-
 }

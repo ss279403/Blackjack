@@ -7,19 +7,15 @@ public class FaceCard extends Card {
 	public FaceCard(Suit suit, FaceCards rank) {
 		super(suit);
 		this.rank = rank;
-
-	} 
+	}
 
 	@Override
 	public String getRank() {
-
 		return rank.toString();
 	}
 
 	@Override
 	public int getValue() {
-
 		return 10;
 	}
-
 }

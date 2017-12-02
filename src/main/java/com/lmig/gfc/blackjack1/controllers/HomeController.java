@@ -7,12 +7,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.lmig.gfc.blackjack1.models.Game;
 
-
 @Controller
 public class HomeController {
 
 	private Game game;
-	
 
 	public HomeController() {
 		game = new Game();
@@ -29,26 +27,32 @@ public class HomeController {
 	}
 
 	@PostMapping("/bet")
-	public ModelAndView handleBet(int bet) {
+	public ModelAndView handleBet(double bet) {
 		game.makePlayerBet(bet);
 
 		game.setUpGame();
-
-		// chips.setMoney(chips.getMoney() - bet);
 
 		ModelAndView mv = new ModelAndView();
 
 		mv.addObject("game", game);
 		mv.setViewName("redirect:/play");
 
-		return mv; 
+		return mv;
 	}
 
 	@GetMapping("/play")
 	public ModelAndView showPlayScreen() {
 		ModelAndView mv = new ModelAndView();
-		mv.setViewName("play");
-		
+
+		if (game.outOfMoney() == true && game.didPlayerLose()) {
+			mv.setViewName("redirect:/noMoney");
+		} else if (game.outOfCards() == true) {
+			mv.setViewName("redirect:/noCards");
+
+		} else {
+			mv.setViewName("play");
+		}
+
 		mv.addObject("game", game);
 
 		return mv;
@@ -57,39 +61,78 @@ public class HomeController {
 	@PostMapping("/hit")
 	public ModelAndView hitPlayerScreen() {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("game", game);
 
-		game.hitPlayer();
-//		game.payout();
+		try {
+			game.hitPlayer();
+			if (game.didPlayerLose()) {
+				game.payout();
+			}
+			mv.setViewName("redirect:/play");
+		} catch (Exception e) {
+			mv.setViewName("redirect:/over");
+		}
 
-		mv.setViewName("redirect:/play");
 		return mv;
+
 	}
 
 	@PostMapping("/stand")
 	public ModelAndView hitDealerScreen() {
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("game", game);
 
-		game.playerStands();
-	//	game.payout();
-		// if game.playerWon()
-			// mv.setViewName(playerWON)
-			// else { mv.setViewName(playerLost)
+		try {
+			game.playerStands();
+			game.payout();
+		} catch (Exception e) {
+		}
+		mv.setViewName("redirect:/over");
+		return mv;
+	}
+
+	@GetMapping("/over")
+	public ModelAndView showOverScreen() {
+		ModelAndView mv = new ModelAndView();
+
+		mv.addObject("game", game);
+
+		if (game.outOfMoney() == true) {
+			mv.setViewName("redirect:/noMoney");
+		} else if (game.outOfCards() == true) {
+			mv.setViewName("redirect:/noCards");
+
+		} else {
+			mv.setViewName("over");
+		}
+		return mv;
+	}
+
+	@PostMapping("/reBet")
+	public ModelAndView nextHandScreen(int bet) {
+		ModelAndView mv = new ModelAndView();
+		game.makePlayerBet(bet);
+		game.resetGame();
 
 		mv.setViewName("redirect:/play");
 		return mv;
 	}
-	
-	@PostMapping("/reBet")
-	public ModelAndView nextHandScreen() {
-		ModelAndView mv = new ModelAndView();
-		
-		game.resetGame();
-	//	game.payout();
-		// if game.playerWon()
-			// mv.setViewName(playerWON)
-			// else { mv.setViewName(playerLost)
 
-		mv.setViewName("redirect:/play");
+	@GetMapping("/noMoney")
+	public ModelAndView noMoneyScreen() {
+		ModelAndView mv = new ModelAndView();
+		game.moreMoney();
+		mv.addObject("game", game);
+		mv.setViewName("noMoney");
+		return mv;
+	}
+
+	@GetMapping("/noCards")
+	public ModelAndView noCardsScreen() {
+		ModelAndView mv = new ModelAndView();
+		game.newCards();
+		mv.addObject("game", game);
+		mv.setViewName("noCards");
 		return mv;
 	}
 

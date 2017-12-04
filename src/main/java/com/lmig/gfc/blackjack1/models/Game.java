@@ -60,6 +60,14 @@ public class Game {
 		return false;
 	}
 
+	public boolean didPlayerWinDoubleDown() {
+		if (player.getHandTotal() > dealer.getHandTotal() && !player.isBusted()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean didDealerWin() {
 		if (player.isBusted() || (dealer.getHandTotal() > player.getHandTotal() && !dealer.isBusted())) {
 			return true;
@@ -86,7 +94,7 @@ public class Game {
 	}
 
 	public boolean outOfCards() {
-		return deck.size() == 0 ;
+		return deck.size() == 0;
 	}
 
 	public void payout() {
@@ -114,7 +122,7 @@ public class Game {
 	public boolean outOfMoney() {
 		return chips.getMoney() <= 0;
 	}
-	
+
 	public void moreMoney() {
 		chips.depositMoney();
 	}
@@ -124,9 +132,38 @@ public class Game {
 		dealer.newHand();
 		this.setUpGame();
 	}
-	
+
 	public void newCards() {
 		deck.createDeck();
 		deck.shuffle();
 	}
+	
+	
+
+	public boolean doubleDownSize() {
+		if (player.getHandSize() == 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void doubleDownPayout() {
+		if (isBlackjack() == true) {
+			chips.blackjackMoneyWin(playerBet * 2);
+		}
+		if (didPlayerWinDoubleDown() == true) {
+			chips.increaseFromWin(playerBet * 2);
+		}
+		if (isPush() == true) {
+			chips.pushPayout(playerBet * 2);
+		} else {
+			chips.reduceFromLoss(playerBet * 2);
+		}
+	}
+	
+	public void doubleDownBet() {
+		chips.decreaseByBet(playerBet);
+	}
+
 }

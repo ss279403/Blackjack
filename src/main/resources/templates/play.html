@@ -61,6 +61,12 @@ You lost the hand, but you can bet again!
 </form>
 {{/game.player.hand.isBusted}}
 
+{{#game.doubleDownSize}}
+<form method="post" action="/doubleDown">
+	<button>Double Down</button>
+</form>
+{{/game.doubleDownSize}}
+
 <br>
 ${{game.playerBet}} is your bet.
 <br>
@@ -69,9 +75,6 @@ Value of Chips ${{game.chips.money}}
 
 
 
-<br><br><br>
-{{#game.deck.deck}}
-	{{rank}} of {{suit}}
-{{/game.deck.deck}}
+
 </body>
 </html>

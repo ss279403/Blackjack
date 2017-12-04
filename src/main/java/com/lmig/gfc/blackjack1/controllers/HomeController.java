@@ -72,9 +72,7 @@ public class HomeController {
 		} catch (Exception e) {
 			mv.setViewName("redirect:/over");
 		}
-
 		return mv;
-
 	}
 
 	@PostMapping("/stand")
@@ -85,6 +83,22 @@ public class HomeController {
 		try {
 			game.playerStands();
 			game.payout();
+		} catch (Exception e) {
+		}
+		mv.setViewName("redirect:/over");
+		return mv;
+	}
+
+	@PostMapping("/doubleDown")
+	public ModelAndView doubleDownScreen() {
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("game", game);
+
+		try {
+			game.doubleDownBet();
+			game.hitPlayer();
+			game.playerStands();
+			game.doubleDownPayout();
 		} catch (Exception e) {
 		}
 		mv.setViewName("redirect:/over");
